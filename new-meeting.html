@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAIZEN-Video Call</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <style>
+        :root {
+            --base-color: white;
+            --base-varient: #e8e9ed;
+            --text-color: #111528;
+            --primary-color: #3a435d;
+            --secondary-color: #232738;
+            --accent-color: #0071ff;
+            --icon-color: #3a435d;
+        }
+
+        .darkmode {
+            --base-color: #070b1d;
+            --base-varient: #101425;
+            --text-color: #ffffff;
+            --primary-color: #a4a5b8;
+            --secondary-color: #3a435d;
+            --accent-color: #0071ff;
+            --icon-color: #ffffff;
+        }
+        *{
+            margin: 0;
+            border: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: var(--base-color);
+            color: var(--text-color);
+        }
+
+        .navbar{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80px;
+            width: 100%;
+            position: sticky;
+            top: 0;
+            background: transparent;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+        }
+
+        .navbar-container{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+            max-width: 1600px;
+            padding: 0 20px;
+        }
+
+        .navbar-logo{
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .navbar-logo:hover{
+            color: var(--accent-color);
+        }
+
+        .navbar-container .navbar-menu{
+            display: flex;
+            text-align: center;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .navbar-container .navbar-menu li a{
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 1.3rem;
+            font-weight: 500;
+            padding: 3px 20px;
+            border-radius: 20px;
+            border: 2px solid transparent;
+            transition: all 0.7s ease;
+            white-space: nowrap;
+        }
+
+        .navbar-container .navbar-menu li a:hover, 
+        .navbar-container .navbar-menu li a.active{
+            color: #fff;
+            background: black;
+            border: 2px solid black;
+        }
+
+        /* Video Call Container Styles */
+        #call-container {
+            margin-top: 80px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+        }
+
+        #permission-alert {
+            display: none;
+            background: var(--base-varient);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        #room-id-display {
+            display: none;
+            background: var(--base-varient);
+            padding: 10px 20px;
+            border-radius: 30px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #startCall {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        #startCall:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        #video-container {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .video-wrapper {
+            background: var(--base-varient);
+            border-radius: 10px;
+            padding: 15px;
+            width: 48%;
+            min-width: 300px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .video-wrapper p {
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            border-radius: 8px;
+            background: #000;
+        }
+
+        #controls {
+            display: none;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .control-btn {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .control-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 880px) {
+            .navbar {
+                backdrop-filter: none;
+            }     
+            
+            .navbar-container .navbar-menu {
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.7rem;
+                position: fixed;
+                height: 100vh;
+                width: 250px;
+                top: 0;
+                right: 0;
+                padding: 5rem 1.5rem;
+                box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(10px);
+                background-color: rgba(255, 255, 255, 0.8);
+            }    
+
+            .navbar-container .navbar-menu.active {
+                display: flex;
+            }
+
+            .video-wrapper {
+                width: 100%;
+            }
+
+            video {
+                max-height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-container {
+                padding: 0 1rem;
+            }
+
+            .navbar-logo {
+                font-size: 1.7rem;
+            }
+
+            .navbar-container .navbar-menu li a {
+                font-size: 1.2rem;
+                padding: 3px 15px;
+            }
+
+            .control-btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+                min-width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="KAIZEN.html" class="navbar-logo">KAIZEN</a>
+            <button class="navbar-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="navbar-menu">
+                <li><a href="/Home.html">Home</a></li>
+                <li><a href="/About_Us.html">About Us</a></li>
+                <li><a href="/Schedule.html">Schedule</a></li>
+                <li><a href="/new-meeting.html" class="active">Video Call</a></li>
+                <li><a href="/contact.html">Contact Us</a></li>
+                <li><a href="/Group.html">Group</a></li>
+                <button id="theme-switch" aria-label="Toggle dark mode">
+                    <!-- Moon icon (dark mode) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/>
+                    </svg>
+                    
+                    <!-- Sun icon (light mode) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" style="display:none">
+                        <path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/>
+                    </svg>
+                </button>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="call-container">
+        <div id="permission-alert">
+            <p>🔒 <strong>Privacy Notice:</strong> Video data is encrypted end-to-end using WebRTC. Room IDs expire after 24 hours.</p>
+        </div>
+
+        <div id="room-id-display" title="Click to copy"></div>
+        <button id="startCall">Start Video Call</button>
+        
+        <div id="video-container">
+            <div class="video-wrapper">
+                <p>Your Camera</p>
+                <video id="localVideo" autoplay muted playsinline></video>
+            </div>
+            <div class="video-wrapper">
+                <p>Remote Participant</p>
+                <video id="remoteVideo" autoplay playsinline></video>
+            </div>
+        </div>
+
+        <div id="controls">
+            <button id="endCall" class="control-btn">End Call</button>
+            <button id="toggleVideo" class="control-btn">Turn Off Video</button>
+            <button id="toggleAudio" class="control-btn">Mute Mic</button>
+            <button id="shareScreen" class="control-btn">Share Screen</button>
+        </div>
+    </div>
+
+    <script>
+        // Firebase configuration (replace with your own)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDEXAMPLEEXAMPLEEXAMPLE",
+            authDomain: "your-project.firebaseapp.com",
+            databaseURL: "https://your-project.firebaseio.com",
+            projectId: "your-project",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abc123xyz456"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Theme switcher
+        const themeSwitch = document.getElementById('theme-switch');
+        themeSwitch.addEventListener('click', () => {
+            document.body.classList.toggle('darkmode');
+            localStorage.setItem('darkMode', document.body.classList.contains('darkmode'));
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('darkmode');
+        }
+
+        // Navbar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.querySelector('.navbar-toggle');
+            const menu = document.querySelector('.navbar-menu');
+            
+            toggleButton.addEventListener('click', function() {
+                menu.classList.toggle('active');
+                toggleButton.classList.toggle('active');
+                const isExpanded = toggleButton.classList.contains('active');
+                toggleButton.setAttribute('aria-expanded', isExpanded);
+            });
+            
+            const menuItems = document.querySelectorAll('.navbar-menu a');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 880) {
+                        menu.classList.remove('active');
+                        toggleButton.classList.remove('active');
+                        toggleButton.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            });
+        });
+
+        // Video Call Implementation
+        const startBtn = document.getElementById('startCall');
+        const endBtn = document.getElementById('endCall');
+        const toggleVideoBtn = document.getElementById('toggleVideo');
+        const toggleAudioBtn = document.getElementById('toggleAudio');
+        const shareScreenBtn = document.getElementById('shareScreen');
+        const localVideo = document.getElementById('localVideo');
+        const remoteVideo = document.getElementById('remoteVideo');
+        const controls = document.getElementById('controls');
+        const permissionAlert = document.getElementById('permission-alert');
+        const roomIdDisplay = document.getElementById('room-id-display');
+        
+        let localStream;
+        let screenStream;
+        let peerConnection;
+        let currentRoomId;
+        let isCaller = false;
+
+        // WebRTC configuration
+        const rtcConfig = {
+            iceServers: [
+                { urls: "stun:stun.l.google.com:19302" },
+                { urls: "stun:stun1.l.google.com:19302" }
+            ]
+        };
+
+        // Start Call
+        startBtn.addEventListener('click', async () => {
+            const action = confirm("Create new room (OK) or join existing (Cancel)?");
+            isCaller = action;
+            
+            currentRoomId = isCaller ? generateRoomId() : prompt("Enter room ID to join:");
+            if (!currentRoomId) return;
+            
+            permissionAlert.style.display = 'block';
+            roomIdDisplay.textContent = `Room ID: ${currentRoomId}`;
+            roomIdDisplay.style.display = 'block';
+            roomIdDisplay.addEventListener('click', copyRoomId);
+            
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: {
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }, 
+                    audio: true 
+                });
+                
+                localVideo.srcObject = localStream;
+                setupPeerConnection();
+                
+                if (isCaller) {
+                    createRoom(currentRoomId);
+                    const offer = await peerConnection.createOffer();
+                    await peerConnection.setLocalDescription(offer);
+                    database.ref(`rooms/${currentRoomId}`).update({ offer });
+                } else {
+                    joinRoom(currentRoomId);
+                }
+                
+                startBtn.style.display = 'none';
+                document.getElementById('video-container').style.display = 'flex';
+                controls.style.display = 'flex';
+                
+            } catch (error) {
+                console.error("Error starting call:", error);
+                permissionAlert.innerHTML = `<p style="color:red">❌ Error: ${error.message}</p>`;
+            }
+        });
+
+        function setupPeerConnection() {
+            peerConnection = new RTCPeerConnection(rtcConfig);
+            
+            // Add local stream tracks
+            localStream.getTracks().forEach(track => {
+                peerConnection.addTrack(track, localStream);
+            });
+            
+            // Handle remote stream
+            peerConnection.ontrack = event => {
+                remoteVideo.srcObject = event.streams[0];
+                remoteVideo.style.backgroundColor = 'transparent';
+            };
+            
+            // ICE candidate handling
+            peerConnection.onicecandidate = event => {
+                if (event.candidate) {
+                    database.ref(`rooms/${currentRoomId}/candidates`).push(event.candidate.toJSON());
+                }
+            };
+            
+            // Listen for ICE candidates
+            database.ref(`rooms/${currentRoomId}/candidates`).on('child_added', async snapshot => {
+                const candidate = new RTCIceCandidate(snapshot.val());
+                try {
+                    await peerConnection.addIceCandidate(candidate);
+                } catch (e) {
+                    console.error("Error adding ICE candidate:", e);
+                }
+            });
+        }
+
+        function createRoom(roomId) {
+            database.ref(`rooms/${roomId}`).onDisconnect().remove();
+            alert(`Share this room ID with your partner: ${roomId}`);
+            
+            // Listen for answers
+            database.ref(`rooms/${roomId}`).on('value', async snapshot => {
+                const data = snapshot.val();
+                if (data?.answer && !peerConnection.currentRemoteDescription) {
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+                }
+            });
+        }
+
+        function joinRoom(roomId) {
+            database.ref(`rooms/${roomId}`).on('value', async snapshot => {
+                const data = snapshot.val();
+                if (data?.offer && !peerConnection.currentRemoteDescription) {
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+                    const answer = await peerConnection.createAnswer();
+                    await peerConnection.setLocalDescription(answer);
+                    database.ref(`rooms/${roomId}`).update({ answer });
+                }
+            });
+        }
+
+        function generateRoomId() {
+            return Math.random().toString(36).substring(2, 8).toUpperCase();
+        }
+
+        function copyRoomId() {
+            navigator.clipboard.writeText(currentRoomId);
+            const originalText = roomIdDisplay.textContent;
+            roomIdDisplay.textContent = "Copied to clipboard!";
+            setTimeout(() => {
+                roomIdDisplay.textContent = originalText;
+            }, 2000);
+        }
+
+        // End Call
+        endBtn.addEventListener('click', () => {
+            stopAllStreams();
+            resetUI();
+            if (currentRoomId) {
+                database.ref(`rooms/${currentRoomId}`).off();
+                database.ref(`rooms/${currentRoomId}`).remove();
+            }
+        });
+
+        // Toggle Video
+        toggleVideoBtn.addEventListener('click', () => {
+            if (localStream) {
+                const videoTrack = localStream.getVideoTracks()[0];
+                if (videoTrack) {
+                    videoTrack.enabled = !videoTrack.enabled;
+                    toggleVideoBtn.textContent = videoTrack.enabled ? 
+                        'Turn Off Video' : 'Turn On Video';
+                }
+            }
+        });
+
+        // Toggle Audio
+        toggleAudioBtn.addEventListener('click', () => {
+            if (localStream) {
+                const audioTrack = localStream.getAudioTracks()[0];
+                if (audioTrack) {
+                    audioTrack.enabled = !audioTrack.enabled;
+                    toggleAudioBtn.textContent = audioTrack.enabled ? 
+                        'Mute Mic' : 'Unmute Mic';
+                }
+            }
+        });
+
+        // Share Screen
+        shareScreenBtn.addEventListener('click', async () => {
+            try {
+                if (screenStream) {
+                    screenStream.getTracks().forEach(track => track.stop());
+                    screenStream = null;
+                    shareScreenBtn.textContent = 'Share Screen';
+                    localVideo.srcObject = localStream;
+                } else {
+                    screenStream = await navigator.mediaDevices.getDisplayMedia({
+                        video: { displaySurface: 'browser' },
+                        audio: true
+                    });
+                    
+                    // Replace video track
+                    const [screenTrack] = screenStream.getVideoTracks();
+                    const sender = peerConnection.getSenders().find(s => s.track.kind === 'video');
+                    if (sender) sender.replaceTrack(screenTrack);
+                    
+                    localVideo.srcObject = screenStream;
+                    shareScreenBtn.textContent = 'Stop Sharing';
+                    
+                    screenTrack.onended = () => {
+                        shareScreenBtn.textContent = 'Share Screen';
+                        const [cameraTrack] = localStream.getVideoTracks();
+                        const sender = peerConnection.getSenders().find(s => s.track.kind === 'video');
+                        if (sender) sender.replaceTrack(cameraTrack);
+                        localVideo.srcObject = localStream;
+                        screenStream = null;
+                    };
+                }
+            } catch (error) {
+                console.error('Screen sharing error:', error);
+            }
+        });
+
+        // Helper functions
+        function stopAllStreams() {
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+            }
+            if (screenStream) {
+                screenStream.getTracks().forEach(track => track.stop());
+            }
+            if (peerConnection) {
+                peerConnection.close();
+            }
+            localVideo.srcObject = null;
+            remoteVideo.srcObject = null;
+            remoteVideo.style.backgroundColor = '#000';
+        }
+
+        function resetUI() {
+            controls.style.display = 'none';
+            document.getElementById('video-container').style.display = 'none';
+            startBtn.style.display = 'block';
+            roomIdDisplay.style.display = 'none';
+            toggleVideoBtn.textContent = 'Turn Off Video';
+            toggleAudioBtn.textContent = 'Mute Mic';
+            shareScreenBtn.textContent = 'Share Screen';
+        }
+    </script>
+</body>
+</html>

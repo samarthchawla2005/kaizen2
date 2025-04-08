@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        :root {
+            --base-color: white;
+            --base-varient: #e8e9ed;
+            --text-color: #111528;
+            --primary-color: #3a435d;
+            --secondary-color: #232738;
+            --accent-color: #0071ff;
+            --icon-color: #3a435d;
+        }
+
+        .darkmode {
+            --base-color: #070b1d;
+            --base-varient: #101425;
+            --text-color: #ffffff;
+            --primary-color: #a4a5b8;
+            --secondary-color: #3a435d;
+            --accent-color: #0071ff;
+            --icon-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            border: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: var(--base-color);
+        }
+
+        body.darkmode {
+            background-color: var(--base-color);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80px;
+            width: 100%;
+            position: sticky;
+            top: 0;
+            background: transparent;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+        }
+
+        .navbar-container {
+            display: flex;
+            /* justify-content: space-between; */
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+            max-width: 1600px;
+            padding: 0 20px;
+        }
+
+        .navbar-logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .navbar-logo:hover {
+            color: #007BFF;
+        }
+
+        .navbar-container .navbar-menu {
+            display: flex;
+            text-align: center;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .navbar-container .navbar-menu li a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            font-weight: 500;
+            padding: 3px 20px;
+            border-radius: 20px;
+            border: 2px solid transparent;
+            transition: all 0.7s ease;
+            white-space: nowrap;
+        }
+
+        .navbar-container .navbar-menu li a:hover,
+        .navbar-container .navbar-menu li a.active {
+            color: #fff;
+            background: black;
+            border: 2px solid black;
+        }
+
+        .navbar-toggle {
+            display: none;
+            background: transparent;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            z-index: 999;
+        }
+
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            background-color: black;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #theme-switch {
+            height: 50px;
+            width: 50px;
+            padding: 0;
+            border-radius: 50%;
+            background: var(--base-varient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 17px;
+            right: 20px;
+            border: none;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        #theme-switch svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary-color);
+            /* Use primary color for better contrast */
+            transition: fill 0.3s ease;
+        }
+
+        /* .darkmode #theme-switch svg {
+            fill: var(--text-color); 
+        } */
+
+        #theme-switch svg:last-child {
+            display: none;
+        }
+
+        .darkmode #theme-switch svg:first-child {
+            display: none;
+        }
+
+        .darkmode #theme-switch svg:last-child {
+            display: block;
+        }
+
+        @media (max-width: 880px) {
+            .navbar {
+                backdrop-filter: none;
+            }
+
+            .navbar-container .navbar-menu {
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.7rem;
+                position: fixed;
+                height: 100vh;
+                width: 250px;
+                top: 0;
+                right: 0;
+                padding: 5rem 1.5rem;
+                box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(10px);
+                background-color: rgba(255, 255, 255, 0.8);
+            }
+
+            .navbar-container .navbar-menu.active {
+                display: flex;
+            }
+
+            .navbar-toggle {
+                display: block;
+            }
+
+            .navbar-toggle.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .navbar-toggle.active .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .navbar-toggle.active .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-container {
+                padding: 0 1rem;
+            }
+
+            .navbar-logo {
+                font-size: 1.7rem;
+            }
+
+            .navbar-container .navbar-menu li a {
+                font-size: 1.2rem;
+                padding: 3px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Welcome Back</h1>
+            <p>Please enter your credentials to login</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+                <div id="usernameError" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <div id="passwordError" class="error-message"></div>
+            </div>
+
+            <button type="submit" class="login-button">Login</button>
+        </form>
+
+        <div class="signup-link">
+            Don't have an account? <a href="signup.html">Sign up</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    window.location.href = '/home.html';
+                } else {
+                    const error = await response.text();
+                    alert('Login failed: ' + error);
+                }
+            } catch (error) {
+                alert('Error logging in: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

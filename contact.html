@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAIZEN - Contact Us</title>
+    <style>
+        :root {
+            --base-color: white;
+            --base-varient: #e8e9ed;
+            --text-color: #111528;
+            --primary-color: #3a435d;
+            --secondary-color: #232738;
+            --accent-color: #0071ff;
+            --icon-color: #3a435d;
+        }
+
+        .darkmode {
+            --base-color: #070b1d;
+            --base-varient: #101425;
+            --text-color: #ffffff;
+            --primary-color: #a4a5b8;
+            --secondary-color: #3a435d;
+            --accent-color: #0071ff;
+            --icon-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            border: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: var(--base-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80px;
+            width: 100%;
+            position: sticky;
+            top: 0;
+            background: transparent;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+        }
+
+        .navbar-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+            max-width: 1600px;
+            padding: 0 20px;
+        }
+
+        .navbar-logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .navbar-logo:hover {
+            color: #007BFF;
+        }
+
+        .navbar-container .navbar-menu {
+            display: flex;
+            text-align: center;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .navbar-container .navbar-menu li a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            font-weight: 500;
+            padding: 3px 20px;
+            border-radius: 20px;
+            border: 2px solid transparent;
+            transition: all 0.7s ease;
+            white-space: nowrap;
+        }
+
+        .navbar-container .navbar-menu li a:hover,
+        .navbar-container .navbar-menu li a.active {
+            color: #fff;
+            background: black;
+            border: 2px solid black;
+        }
+
+        .navbar-toggle {
+            display: none;
+            background: transparent;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            z-index: 999;
+        }
+
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            background-color: black;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #theme-switch {
+            height: 50px;
+            width: 50px;
+            padding: 0;
+            border-radius: 50%;
+            background: var(--base-varient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 17px;
+            right: 20px;
+            border: none;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        #theme-switch svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary-color);
+            transition: fill 0.3s ease;
+        }
+
+        .darkmode #theme-switch svg:first-child {
+            display: none;
+        }
+
+        .darkmode #theme-switch svg:last-child {
+            display: block;
+        }
+
+        /* Contact Section Styles */
+        .contact-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .contact-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .contact-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .contact-header p {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .contact-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 0.8rem;
+            border: 1px solid var(--base-varient);
+            border-radius: 8px;
+            background: var(--base-varient);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(0, 113, 255, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .submit-btn {
+            grid-column: span 2;
+            padding: 1rem;
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .submit-btn:hover {
+            background: #005bb5;
+            transform: translateY(-2px);
+        }
+
+        /* Success message */
+        .success-message {
+            display: none;
+            background: #4CAF50;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .contact-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .full-width,
+            .submit-btn {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 880px) {
+            .navbar {
+                backdrop-filter: none;
+            }
+            
+            .navbar-container .navbar-menu {
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.7rem;
+                position: fixed;
+                height: 100vh;
+                width: 250px;
+                top: 0;
+                right: 0;
+                padding: 5rem 1.5rem;
+                box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(10px);
+                background-color: rgba(255, 255, 255, 0.8);
+            }
+
+            .darkmode .navbar-container .navbar-menu {
+                background-color: rgba(7, 11, 29, 0.8);
+            }
+
+            .navbar-container .navbar-menu.active {
+                display: flex;
+            }
+
+            .navbar-toggle {
+                display: block;
+            }
+
+            #theme-switch {
+                position: fixed;
+                top: 17px;
+                right: 70px;
+            }
+
+            .navbar-toggle.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .navbar-toggle.active .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .navbar-toggle.active .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-container {
+                padding: 0 1rem;
+            }
+
+            .navbar-logo {
+                font-size: 1.7rem;
+            }
+
+            .navbar-container .navbar-menu li a {
+                font-size: 1.2rem;
+                padding: 3px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="KAIZEN.html" class="navbar-logo">KAIZEN</a>
+            <button class="navbar-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="navbar-menu">
+                <li><a href="/Home.html">Home</a></li>
+                <li><a href="/About_Us.html">About Us</a></li>
+                <li><a href="/Schedule.html">Schedule</a></li>
+                <li><a href="/new-meeting.html">New Meeting</a></li>
+                <li><a href="/contact.html" class="active">Contact Us</a></li>
+                <li><a href="/Group.html">Group</a></li>
+                <button id="theme-switch" aria-label="Toggle dark mode">
+                    <!-- Moon icon (dark mode) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/>
+                    </svg>
+                    
+                    <!-- Sun icon (light mode) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" style="display:none">
+                        <path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/>
+                    </svg>
+                </button>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="contact-container">
+        <div class="contact-header">
+            <h1>Get in Touch</h1>
+            <p>Please Enter Your Credentials</p>
+        </div>
+        
+        <!-- Updated Form with proper FormSubmit configuration -->
+        <form class="contact-form" action="https://formsubmit.co/chawlasamarth15@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="New Contact Form Submission from KAIZEN">
+            <input type="hidden" name="_next" value="https://fabulous-moonbeam-b425c9.netlify.app//contact.html?success=true">
+            <input type="hidden" name="_template" value="table">
+            <input type="text" name="_honey" style="display:none">
+            
+            <div class="form-group">
+                <label for="first-name">FIRST NAME</label>
+                <input type="text" id="first-name" name="first-name" placeholder="Please enter first name..." required>
+            </div>
+            
+            <div class="form-group">
+                <label for="last-name">LAST NAME</label>
+                <input type="text" id="last-name" name="last-name" placeholder="Please enter last name..." required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">EMAIL</label>
+                <input type="email" id="email" name="email" placeholder="Please enter email..." required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">PHONE NUMBER</label>
+                <input type="tel" id="phone" name="phone" placeholder="Please enter phone number...">
+            </div>
+            
+            <div class="form-group full-width">
+                <label for="message">WHAT DO YOU HAVE IN MIND</label>
+                <textarea id="message" name="message" placeholder="Please enter query..." required></textarea>
+            </div>
+            
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+        
+        <div id="success-message" class="success-message" style="display: none;">
+            Thank you for your message! We'll get back to you soon.
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navbar toggle functionality
+            const toggleButton = document.querySelector('.navbar-toggle');
+            const menu = document.querySelector('.navbar-menu');
+            
+            toggleButton.addEventListener('click', function() {
+                menu.classList.toggle('active');
+                toggleButton.classList.toggle('active');
+                toggleButton.setAttribute('aria-expanded', 
+                    toggleButton.classList.contains('active'));
+            });
+            
+            // Close menu when clicking on a link
+            const menuItems = document.querySelectorAll('.navbar-menu a');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 880) {
+                        menu.classList.remove('active');
+                        toggleButton.classList.remove('active');
+                        toggleButton.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            });
+
+            // Theme switcher
+            const themeSwitch = document.getElementById('theme-switch');
+            themeSwitch.addEventListener('click', function() {
+                document.body.classList.toggle('darkmode');
+                localStorage.setItem('darkMode', 
+                    document.body.classList.contains('darkmode'));
+            });
+            
+            // Check for saved theme preference
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('darkmode');
+            }
+
+            // Show success message if redirected after form submission
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('success')) {
+                document.getElementById('success-message').style.display = 'block';
+                history.replaceState(null, '', window.location.pathname);
+            }
+        });
+    </script>
+</body>
+</html>

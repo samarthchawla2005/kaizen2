@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KAIZEN-Group</title>
+  <style>
+    :root {
+      --base-color: white;
+      --base-varient: #e8e9ed;
+      --text-color: #111528;
+      --primary-color: #3a435d;
+      --secondary-color: #232738;
+      --accent-color: #0071ff;
+      --icon-color: #3a435d;
+    }
+
+    .darkmode {
+      --base-color: #070b1d;
+      --base-varient: #101425;
+      --text-color: #ffffff;
+      --primary-color: #a4a5b8;
+      --secondary-color: #3a435d;
+      --accent-color: #0071ff;
+      --icon-color: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      border: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      background-color: var(--base-color);
+    }
+
+    body.darkmode {
+      background-color: var(--base-color);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 80px;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      background: transparent;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      z-index: 999;
+    }
+
+    .navbar-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+      max-width: 1600px;
+      padding: 0 20px;
+    }
+
+    .navbar-logo {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .darkmode .navbar-logo {
+      color: white;
+    }
+
+    .navbar-logo:hover {
+      color: #007BFF;
+    }
+
+    .navbar-container .navbar-menu {
+      display: flex;
+      text-align: center;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .navbar-container .navbar-menu li a {
+      text-decoration: none;
+      color: var(--text-color);
+      font-size: 1.3rem;
+      font-weight: 500;
+      padding: 3px 20px;
+      border-radius: 20px;
+      border: 2px solid transparent;
+      transition: all 0.7s ease;
+      white-space: nowrap;
+    }
+
+    .navbar-container .navbar-menu li a:hover {
+      color: #fff;
+      background: black;
+      border: 2px solid black;
+    }
+
+    .navbar-toggle {
+      display: none;
+      background: transparent;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    .bar {
+      display: block;
+      width: 25px;
+      height: 3px;
+      margin: 5px auto;
+      background-color: black;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .grp_btn {
+      display: block;
+      background-color: #0071ff;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 5px;
+      margin: 20px auto;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .grp_btn:hover {
+      background-color: #0056b3;
+    }
+
+    .groups-list {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .group-item {
+      background-color: var(--base-varient);
+      padding: 15px;
+      margin: 10px;
+      border-radius: 8px;
+      display: inline-block;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .group-item button {
+      background-color: #0071ff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .group-item button:hover {
+      background-color: #0056b3;
+    }
+
+    #theme-switch {
+      height: 50px;
+      width: 50px;
+      padding: 0;
+      border-radius: 50%;
+      background: var(--base-varient);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 17px;
+      right: 20px;
+      border: none;
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+    #theme-switch svg {
+      width: 24px;
+      height: 24px;
+      fill: var(--primary-color);
+      transition: fill 0.3s ease;
+    }
+
+    #theme-switch svg:last-child {
+      display: block;
+    }
+
+    .darkmode #theme-switch svg:last-child {
+      display: none;
+    }
+
+    .darkmode #theme-switch svg:first-child {
+      display: none;
+    }
+
+    .darkmode #theme-switch svg:last-child {
+      display: block;
+    }
+
+    @media (max-width: 480px) {
+      .navbar-container {
+        padding: 0 1rem;
+      }
+
+      .navbar-logo {
+        font-size: 1.7rem;
+      }
+
+      .navbar-container .navbar-menu li a {
+        font-size: 1.2rem;
+        padding: 3px 15px;
+      }
+
+      .grp_btn {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="KAIZEN.html" class="navbar-logo">KAIZEN</a>
+      <button class="navbar-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+      <ul class="navbar-menu">
+        <li><a href="/Home.html">Home</a></li>
+        <li><a href="/About_Us.html">About Us</a></li>
+        <li><a href="/Schedule.html">Schedule</a></li>
+        <li><a href="/new-meeting.html">New Meeting</a></li>
+        <li><a href="/contact.html">Contact Us</a></li>
+        <li><a href="/Group.html">Group</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div>
+    <button class="grp_btn" id="createGroupBtn">CREATE A GROUP</button>
+  </div>
+
+  <div class="groups-list" id="groupsList">
+    <!-- Group items will be dynamically injected here -->
+  </div>
+
+  <script>
+    const groupsList = document.getElementById("groupsList");
+    const createGroupBtn = document.getElementById("createGroupBtn");
+
+    function loadGroups() {
+      const groups = JSON.parse(localStorage.getItem("userGroups")) || [];
+
+      groupsList.innerHTML =
+        groups.length === 0
+          ? "<p>You have not created any groups.</p>"
+          : groups
+              .map(
+                (group, index) => `
+        <div class="group-item">
+          <h3>${group.name}</h3>
+          <p>${group.description}</p>
+          <button onclick="window.location.href='GroupHomePage.html?group=${index}'">Show Group</button>
+        </div>`
+              )
+              .join("");
+    }
+
+    createGroupBtn.addEventListener("click", () => {
+  window.location.href = "groupcreatepage.html";
+});
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+  loadGroups();
+
+  // If redirected from group creation, scroll to the group and optionally highlight it
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("new") === "true") {
+    setTimeout(() => {
+      window.scrollTo({ top: document.getElementById("groupsList").offsetTop, behavior: "smooth" });
+    }, 100);
+  }
+});
+
+  </script>
+</body>
+
+</html>

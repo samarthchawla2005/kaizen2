@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Home Page - KAIZEN</title>
+    <style>
+        /* Include your base styles here, same as previous */
+        :root {
+            --base-color: white;
+            --base-varient: #e8e9ed;
+            --text-color: #111528;
+            --primary-color: #3a435d;
+            --secondary-color: #232738;
+            --accent-color: #0071ff;
+            --icon-color: #3a435d;
+        }
+
+        .darkmode {
+            --base-color: #070b1d;
+            --base-varient: #101425;
+            --text-color: #ffffff;
+            --primary-color: #a4a5b8;
+            --secondary-color: #3a435d;
+            --accent-color: #0071ff;
+            --icon-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            border: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background-color: var(--base-color);
+        }
+
+        body.darkmode {
+            background-color: var(--base-color);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80px;
+            width: 100%;
+            position: sticky;
+            top: 0;
+            background: transparent;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+        }
+
+        .navbar-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+            max-width: 1600px;
+            padding: 0 20px;
+        }
+
+        .navbar-logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .darkmode .navbar-logo {
+            color: white;
+        }
+
+        .navbar-logo:hover {
+            color: #007BFF;
+        }
+
+        .navbar-container .navbar-menu {
+            display: flex;
+            text-align: center;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .navbar-container .navbar-menu li a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 1.3rem;
+            font-weight: 500;
+            padding: 3px 20px;
+            border-radius: 20px;
+            border: 2px solid transparent;
+            transition: all 0.7s ease;
+            white-space: nowrap;
+        }
+
+        .darkmode .navbar-container .navbar-menu li a {
+            color: var(--text-color);
+        }
+
+        .darkmode .navbar-container .navbar-menu li a:hover,
+        .darkmode .navbar-container .navbar-menu li a.active {
+            color: var(--text-color);
+            background: var(--primary-color);
+        }
+
+        .navbar-container .navbar-menu li a:hover,
+        .navbar-container .navbar-menu li a.active {
+            color: #fff;
+            background: black;
+            border: 2px solid black;
+        }
+
+        .navbar-toggle {
+            display: none;
+            background: transparent;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            z-index: 999;
+        }
+
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            background-color: black;
+            transition: all 0.3s ease-in-out;
+        }
+
+        @media (max-width: 880px) {
+            .navbar {
+                backdrop-filter: none;
+            }
+
+            .navbar-container .navbar-menu {
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.7rem;
+                position: fixed;
+                height: 100vh;
+                width: 250px;
+                top: 0;
+                right: 0;
+                padding: 5rem 1.5rem;
+                box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(10px);
+                background-color: rgba(255, 255, 255, 0.8);
+            }
+
+            .navbar-container .navbar-menu.active {
+                display: flex;
+            }
+
+            .navbar-toggle {
+                display: block;
+            }
+
+            .navbar-toggle.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .navbar-toggle.active .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .navbar-toggle.active .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+        }
+
+        .group-form,
+        .post-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 60px;
+            padding: 20px;
+            background-color: var(--base-varient);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .group-form input,
+        .group-form textarea,
+        .post-form input,
+        .post-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 2px solid var(--primary-color);
+        }
+
+        .group-form button,
+        .post-form button {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .group-form button:hover,
+        .post-form button:hover {
+            background-color: #0056b3;
+        }
+
+        #theme-switch {
+            height: 50px;
+            width: 50px;
+            padding: 0;
+            border-radius: 50%;
+            background: var(--base-varient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 17px;
+            right: 20px;
+            border: none;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        #theme-switch svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary-color);
+            transition: fill 0.3s ease;
+        }
+
+        #theme-switch svg:last-child {
+            display: block;
+        }
+
+        .darkmode #theme-switch svg:last-child {
+            display: none;
+        }
+
+        .darkmode #theme-switch svg:first-child {
+            display: none;
+        }
+
+        .darkmode #theme-switch svg:last-child {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="KAIZEN.html" class="navbar-logo">KAIZEN</a>
+            <button class="navbar-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="navbar-menu">
+                <li><a href="/Home.html">Home</a></li>
+                <li><a href="/About_Us.html">About Us</a></li>
+                <li><a href="/Schedule.html">Schedule</a></li>
+                <li><a href="/new-meeting.html">New Meeting</a></li>
+                <li><a href="/contact.html">Contact Us</a></li>
+                <li><a href="/Group.html">Group</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Group Creation Form -->
+    <div class="group-form">
+        <h2>Create a New Group</h2>
+        <input type="text" id="group-name" placeholder="Enter Group Name" required>
+        <textarea id="group-description" rows="4" placeholder="Enter Group Description" required></textarea>
+        <button id="create-group-btn">Create Group</button>
+    </div>
+
+    <!-- Create Your Posts Section -->
+    <div class="post-form">
+        <h3>Create your Posts</h3>
+        <input type="text" id="post-title" placeholder="Enter Post Title" required>
+        <textarea id="post-content" rows="4" placeholder="Enter Post Content" required></textarea>
+        <button id="create-post-btn">Create Post</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleButton = document.querySelector('.navbar-toggle');
+            const menu = document.querySelector('.navbar-menu');
+            const themeSwitch = document.getElementById('theme-switch');
+            const createGroupBtn = document.getElementById('create-group-btn');
+            const createPostBtn = document.getElementById('create-post-btn');
+
+            // Navbar toggle functionality
+            toggleButton.addEventListener('click', function () {
+                menu.classList.toggle('active');
+                toggleButton.classList.toggle('active');
+                const isExpanded = toggleButton.classList.contains('active');
+                toggleButton.setAttribute('aria-expanded', isExpanded);
+            });
+
+            // Close menu when clicking on a link
+            const menuItems = document.querySelectorAll('.navbar-menu a');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    if (window.innerWidth <= 880) {
+                        menu.classList.remove('active');
+                        toggleButton.classList.remove('active');
+                        toggleButton.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            });
+
+            // Theme switch functionality
+            themeSwitch.addEventListener('click', function () {
+                document.body.classList.toggle('darkmode');
+                const isDarkMode = document.body.classList.contains('darkmode');
+                const [moonIcon, sunIcon] = themeSwitch.querySelectorAll('svg');
+                
+                if (isDarkMode) {
+                    moonIcon.style.display = 'none';
+                    sunIcon.style.display = 'block';
+                } else {
+                    moonIcon.style.display = 'block';
+                    sunIcon.style.display = 'none';
+                }
+            });
+
+            // Create Group button functionality
+            createGroupBtn.addEventListener('click', function() {
+                const groupName = document.getElementById('group-name').value;
+                const groupDescription = document.getElementById('group-description').value;
+                
+                if (groupName && groupDescription) {
+                    // Save data to localStorage
+                    localStorage.setItem('groupName', groupName);
+                    localStorage.setItem('groupDescription', groupDescription);
+
+                    // Redirect to GroupHomePage.html
+                    alert("Group Created!");
+                    window.location.href = 'GroupHomePage.html';
+                } else {
+                    alert('Please fill in both fields.');
+                }
+            });
+
+            // Create Post button functionality
+            createPostBtn.addEventListener('click', function() {
+                const postTitle = document.getElementById('post-title').value;
+                const postContent = document.getElementById('post-content').value;
+                
+                if (postTitle && postContent) {
+                    alert('Post created successfully!');
+                    // You can store the posts in localStorage as well, or send them to a server.
+                } else {
+                    alert('Please fill in both fields.');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

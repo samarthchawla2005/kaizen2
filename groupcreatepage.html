@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Group - KAIZEN</title>
+  <style>
+    :root {
+      --base-color: white;
+      --base-varient: #e8e9ed;
+      --text-color: #111528;
+      --primary-color: #3a435d;
+      --secondary-color: #232738;
+      --accent-color: #0071ff;
+      --icon-color: #3a435d;
+    }
+
+    .darkmode {
+      --base-color: #070b1d;
+      --base-varient: #101425;
+      --text-color: #ffffff;
+      --primary-color: #a4a5b8;
+      --secondary-color: #3a435d;
+      --accent-color: #0071ff;
+      --icon-color: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      background-color: var(--base-color);
+      color: var(--text-color);
+      padding: 2rem;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 80px;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      background: transparent;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      z-index: 999;
+    }
+
+    .navbar-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+      max-width: 1600px;
+      padding: 0 20px;
+    }
+
+    .navbar-logo {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .darkmode .navbar-logo {
+      color: white;
+    }
+
+    .navbar-logo:hover {
+      color: #007BFF;
+    }
+
+    .navbar-menu {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+      margin-left: auto;
+    }
+
+    .navbar-menu li a {
+      text-decoration: none;
+      color: var(--text-color);
+      font-size: 1.3rem;
+      font-weight: 500;
+      padding: 3px 20px;
+      border-radius: 20px;
+      border: 2px solid transparent;
+      transition: all 0.7s ease;
+    }
+
+    .navbar-menu li a:hover {
+      color: #fff;
+      background: black;
+      border: 2px solid black;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background-color: var(--base-varient);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      height: 100px;
+    }
+
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      background-color: #0071ff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #0056b3;
+    }
+
+    @media (max-width: 480px) {
+      .navbar-menu li a {
+        font-size: 1rem;
+        padding: 3px 10px;
+      }
+
+      .form-container {
+        padding: 1rem;
+      }
+
+      .submit-btn {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="KAIZEN.html" class="navbar-logo">KAIZEN</a>
+      <ul class="navbar-menu">
+        <li><a href="/Home.html">Home</a></li>
+        <li><a href="/About_Us.html">About Us</a></li>
+        <li><a href="/Schedule.html">Schedule</a></li>
+        <li><a href="/new-meeting.html">New Meeting</a></li>
+        <li><a href="/contact.html">Contact Us</a></li>
+        <li><a href="/Group.html">Group</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="form-container">
+    <h2>Create a New Group</h2>
+    <form id="groupForm">
+      <div class="form-group">
+        <label for="groupName">Group Name</label>
+        <input type="text" id="groupName" required />
+      </div>
+      <div class="form-group">
+        <label for="groupDesc">Description</label>
+        <textarea id="groupDesc" required></textarea>
+      </div>
+      <button type="submit" class="submit-btn">Create Group</button>
+    </form>
+  </div>
+
+  <script>
+    const groupForm = document.getElementById("groupForm");
+
+    groupForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("groupName").value.trim();
+      const description = document.getElementById("groupDesc").value.trim();
+
+      if (!name || !description) {
+        alert("Please fill out all fields.");
+        return;
+      }
+
+      const groups = JSON.parse(localStorage.getItem("userGroups")) || [];
+      groups.push({ name, description });
+
+      localStorage.setItem("userGroups", JSON.stringify(groups));
+      window.location.href = "Group.html?new=true";
+    });
+  </script>
+</body>
+
+</html>
